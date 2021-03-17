@@ -6,8 +6,6 @@ import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvaider';
 
-// import User from '../infra/typeorm/entities/User';
-
 interface IRequest {
   password: string;
   token: string;
@@ -32,7 +30,7 @@ class ResetPasswordService {
     if (!userToken) {
       throw new AppError('User token does not exists');
     }
-    const user = await this.usersRepository.findById(userToken?.user_id);
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) {
       throw new AppError('User does not exists');
