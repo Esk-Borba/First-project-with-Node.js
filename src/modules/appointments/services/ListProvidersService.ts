@@ -19,10 +19,6 @@ class ListProvidersService {
       except_user_id: user_id,
     });
 
-    for (let i = 0; i < users.length; i++) {
-      delete users[i].password;
-    }
-
     return users;
   }
 }
