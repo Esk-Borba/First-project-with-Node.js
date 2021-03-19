@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 
 import UpdateProfileService from '@modules/users/services/UpdateProfileService';
 import ShowProfileService from '@modules/users/services/ShowProfileService';
-import UserToken from '../../typeorm/entities/UserToken';
+// import UserToken from '../../typeorm/entities/UserToken';
 
 export default class ProfileController {
   public async show(request: Request, response: Response): Promise<Response> {
