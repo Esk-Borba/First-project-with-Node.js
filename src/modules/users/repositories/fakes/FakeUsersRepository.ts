@@ -1,10 +1,12 @@
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
-import { uuid } from 'uuidv4';
-import User from '../../infra/typeorm/entities/User';
-import IFindAllProviderDTO from '../../dtos/IFindAllProvidersDTO';
+import { uuid } from "uuidv4";
 
-class UsersRepository implements IUsersRepository {
+import IUsersRepository from "@modules/users/repositories/IUsersRepository";
+import ICreateUserDTO from "@modules/users/dtos/ICreateUserDTO";
+import IFindAllProvidersDTO from "@modules/users/dtos/IFindAllProvidersDTO";
+
+import User from "../../infra/typeorm/entities/User";
+
+class FakeUsersRepository implements IUsersRepository {
   private users: User[] = [];
 
   public async findById(id: string): Promise<User | undefined> {
@@ -20,12 +22,12 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findAllProviders({
-    except_user_id,
-  }: IFindAllProviderDTO): Promise<User[]> {
+    expect_user_id,
+  }: IFindAllProvidersDTO): Promise<User[]> {
     let { users } = this;
 
-    if (except_user_id) {
-      users = this.users.filter(user => user.id !== except_user_id);
+    if (expect_user_id) {
+      users = this.users.filter(user => user.id !== expect_user_id);
     }
 
     return users;
@@ -34,7 +36,13 @@ class UsersRepository implements IUsersRepository {
   public async create(userData: ICreateUserDTO): Promise<User> {
     const user = new User();
 
-    Object.assign(user, { id: uuid() }, userData);
+    Object.assign(
+      user,
+      {
+        id: uuid(),
+      },
+      userData,
+    );
 
     this.users.push(user);
 
@@ -42,12 +50,14 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async save(user: User): Promise<User> {
-    const findIndex = this.users.findIndex(findUser => findUser.id === user.id);
+    const userIndex = this.users.findIndex(
+      findIndex => findIndex.id === user.id,
+    );
 
-    this.users[findIndex] = user;
+    this.users[userIndex] = user;
 
     return user;
   }
 }
 
-export default UsersRepository;
+export default FakeUsersRepository;

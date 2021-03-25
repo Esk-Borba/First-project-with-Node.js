@@ -1,4 +1,4 @@
-import ICacheProvider from '../models/ICacheProvider';
+import ICacheProvider from "../models/ICacheProvider";
 
 interface ICacheData {
   [key: string]: string;

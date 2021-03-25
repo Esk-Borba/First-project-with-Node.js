@@ -123,16 +123,8 @@
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,28 +163,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">27x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,7 +192,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { injectable, inject } from 'tsyringe';
 import { getHours, isAfter } from 'date-fns';
 &nbsp;
-// import User from '@modules/users/infra/typeorm/entities/User';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 &nbsp;
 interface IRequest {
@@ -222,7 +207,7 @@ type IResponse = Array&lt;{
 }&gt;;
 &nbsp;
 @injectable()
-class ListProvidersService {
+class ListProviderDayAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -230,44 +215,38 @@ class ListProvidersService {
 &nbsp;
   public async execute({
     provider_id,
-    month,
     year,
+    month,
     day,
   }: IRequest): Promise&lt;IResponse&gt; {
     const appointments = await this.appointmentsRepository.findAllInDayFromProvider(
       {
         provider_id,
-        month,
         year,
+        month,
         day,
       },
     );
 &nbsp;
     const hourStart = 8;
 &nbsp;
-    // Cria um vertor de horas, preenchando os campos a partir das 8 horas da manha
     const eachHourArray = Array.from(
       { length: 10 },
       (_, index) =&gt; index + hourStart,
     );
 &nbsp;
-    // Cria uma nova data
     const currentDate = new Date(Date.now());
 &nbsp;
-    // verifica se os appointments cadastrados, retornando se esta available ou nao atraves da hora,
-    // se ela esta disponivel ou nao
     const availability = eachHourArray.map(hour =&gt; {
-      const hasApppointmentInHour = appointments.find(
+      const hasAppointmentInHour = appointments.find(
         appointment =&gt; getHours(appointment.date) === hour,
       );
 &nbsp;
-      // Cria uma data com base nos appointments
       const compareDate = new Date(year, month - 1, day, hour);
 &nbsp;
       return {
         hour,
-        available: !hasApppointmentInHour &amp;&amp; isAfter(compareDate, currentDate),
-        // verifica se a hora do appointment vem depois da hora atual
+        available: !hasAppointmentInHour &amp;&amp; isAfter(compareDate, currentDate),
       };
     });
 &nbsp;
@@ -275,7 +254,7 @@ class ListProvidersService {
   }
 }
 &nbsp;
-export default ListProvidersService;
+export default ListProviderDayAvailabilityService;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -283,7 +262,7 @@ export default ListProvidersService;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 23 2021 22:26:55 GMT-0300 (Horário Padrão de Brasília)
+                at Thu Mar 25 2021 16:41:48 GMT-0300 (Horário Padrão de Brasília)
             </div>
         </div>
         <script src="../../prettify.js"></script>

@@ -1,8 +1,7 @@
-import { injectable, inject } from 'tsyringe';
-import { getHours, isAfter } from 'date-fns';
+import { injectable, inject } from "tsyringe";
+import { getHours, isAfter } from "date-fns";
 
-// import User from '@modules/users/infra/typeorm/entities/User';
-import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
+import IAppointmentsRepository from "../repositories/IAppointmentsRepository";
 
 interface IRequest {
   provider_id: string;
@@ -17,52 +16,46 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-class ListProvidersService {
+class ListProvidersDayAvailabilityService {
   constructor(
-    @inject('AppointmentsRepository')
+    @inject("AppointmentsRepository")
     private appointmentsRepository: IAppointmentsRepository,
   ) {}
 
   public async execute({
     provider_id,
+    day,
     month,
     year,
-    day,
   }: IRequest): Promise<IResponse> {
     const appointments = await this.appointmentsRepository.findAllInDayFromProvider(
       {
         provider_id,
+        day,
         month,
         year,
-        day,
       },
     );
 
     const hourStart = 8;
 
-    // Cria um vertor de horas, preenchando os campos a partir das 8 horas da manha
     const eachHourArray = Array.from(
       { length: 10 },
       (_, index) => index + hourStart,
     );
 
-    // Cria uma nova data
     const currentDate = new Date(Date.now());
 
-    // verifica se os appointments cadastrados, retornando se esta available ou nao atraves da hora,
-    // se ela esta disponivel ou nao
     const availability = eachHourArray.map(hour => {
-      const hasApppointmentInHour = appointments.find(
+      const hasAppointmentInHour = appointments.find(
         appointment => getHours(appointment.date) === hour,
       );
 
-      // Cria uma data com base nos appointments
       const compareDate = new Date(year, month - 1, day, hour);
 
       return {
         hour,
-        available: !hasApppointmentInHour && isAfter(compareDate, currentDate),
-        // verifica se a hora do appointment vem depois da hora atual
+        available: !hasAppointmentInHour && isAfter(compareDate, currentDate),
       };
     });
 
@@ -70,4 +63,4 @@ class ListProvidersService {
   }
 }
 
-export default ListProvidersService;
+export default ListProvidersDayAvailabilityService;

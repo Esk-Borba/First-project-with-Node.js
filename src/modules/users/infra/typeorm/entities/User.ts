@@ -4,27 +4,25 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import uploadConfig from '@config/upload';
+} from "typeorm";
+import { Exclude, Expose } from "class-transformer";
 
-import { Exclude, Expose } from 'class-transformer';
-
-@Entity('users')
+@Entity("users")
 class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column("varchar")
   name: string;
 
-  @Column()
+  @Column("varchar")
   email: string;
 
-  @Column()
+  @Column("varchar")
   @Exclude()
   password: string;
 
-  @Column()
+  @Column("varchar")
   avatar: string;
 
   @CreateDateColumn()
@@ -33,19 +31,11 @@ class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Expose({ name: 'avatar_url' })
+  @Expose({ name: "avatar_url" })
   getAvatarUrl(): string | null {
-    if (!this.avatar) {
-      return null;
-    }
-    switch (uploadConfig.driver) {
-      case 'disk':
-        return `${process.env.APP_API_URL}/files/${this.avatar}`;
-      case 's3':
-        return `https://${uploadConfig.config.aws.bucket}.s3.amazonaws.com/${this.avatar}`;
-      default:
-        return null;
-    }
+    return this.avatar
+      ? `${process.env.APP_API_URL}/files/${this.avatar}`
+      : null;
   }
 }
 

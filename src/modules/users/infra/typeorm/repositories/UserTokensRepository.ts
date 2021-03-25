@@ -1,8 +1,10 @@
-import { getRepository, Repository } from 'typeorm';
-import IUserTokenRepository from '@modules/users/repositories/IUserTokensRepository';
-import UserToken from '../entities/UserToken';
+import { getRepository, Repository } from "typeorm";
 
-class UserTokenRepository implements IUserTokenRepository {
+import IUserTokensRepository from "@modules/users/repositories/IUserTokensRepository";
+
+import UserToken from "../entities/UserToken";
+
+class UsersTokensRepository implements IUserTokensRepository {
   private ormRepository: Repository<UserToken>;
 
   constructor() {
@@ -28,4 +30,4 @@ class UserTokenRepository implements IUserTokenRepository {
   }
 }
 
-export default UserTokenRepository;
+export default UsersTokensRepository;
